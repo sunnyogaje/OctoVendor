@@ -5,15 +5,16 @@
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "octovendor",
+    "scheme": "OctoVendor",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
+    "jsEngine": "hermes",
     "ios": {
-      "bundleIdentifier": "com.dktsolutions.octovendor",
+      "bundleIdentifier": "com.dktsolutions.OctoVendor",
       "supportsTablet": true
     },
     "android": {
-      "package": "com.dktsolutions.octovendor",
+      "package": "com.dktsolutions.OctoVendor",
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
@@ -30,12 +31,14 @@
       [
         "expo-splash-screen",
         {
-          "image": "./assets/images/splash-icon.png",
+          "image": "./assets/images/logo.png",
           "imageWidth": 200,
           "resizeMode": "contain",
           "backgroundColor": "#ffffff"
         }
-      ]
+      ],
+      "expo-font",
+      "expo-video"
     ],
     "experiments": {
       "typedRoutes": true
@@ -43,9 +46,13 @@
     "extra": {
       "router": {},
       "eas": {
-        "projectId": "0706ef83-ad22-4096-b719-b9db09ebf135"
+        "projectId": "bd925896-01de-41ee-ab36-8a3c423e35c5"
       }
     },
-    "owner": "sunnyogaje"
+    "owner": "octopoint",
+    "runtimeVersion": "1.0.0",
+    "updates": {
+      "url": "https://u.expo.dev/bd925896-01de-41ee-ab36-8a3c423e35c5"
+    }
   }
 }
