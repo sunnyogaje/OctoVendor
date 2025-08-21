@@ -79,7 +79,7 @@ export default function PersonalDetails() {
                 </View>
 
                 {/* Continue Button */}
-                <TouchableOpacity style={styles.cta} activeOpacity={0.9}>
+                <TouchableOpacity style={styles.cta} onPress={() => router.push('./EnableBookingScreen')} activeOpacity={0.9}>
                     <Text style={styles.ctaText}>Continue</Text>
                 </TouchableOpacity>
             </ScrollView>

@@ -19,7 +19,8 @@ export default function Index() {
 
         if (!hasLaunched) {
           await AsyncStorage.setItem("hasLaunched", "true");
-          router.push("./onboarding");
+          // router.push("./onboarding");
+          router.push("./landing");
           // router.push("/(main)/home");
         } else {
           const userToken = await AsyncStorage.getItem("userToken");
