@@ -1,120 +1,152 @@
-import React from "react";
+import React from 'react';
 import {
-  SafeAreaView,
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  Dimensions,
-  Image,
-} from "react-native";
+	View,
+	Text,
+	TextInput,
+	TouchableOpacity,
+	StyleSheet,
+	ScrollView,
+	Platform,
+	useWindowDimensions,
+	Image,
+} from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { Ionicons } from '@expo/vector-icons';
+import { useRouter } from 'expo-router';
 import { LinearGradient } from "expo-linear-gradient";
 
-const { width: W } = Dimensions.get("window");
-const baseW = 375;
-const scale = (s: number) => Math.round((W / baseW) * s);
+const P = {
+	purple: '#4A154B',
+	text: '#111827',
+	subtext: '#6B7280',
+	border: '#E5E0F5',
+	orange: '#F59E0B',
+};
 
-const TEXT = "#111827";
-const SUBTEXT = "#2a2a2aff";
+export default function PersonalDetails() {
+	const router = useRouter();
+	const { width } = useWindowDimensions();
+	const isTablet = width >= 768;
 
-export default function EnableBookingHeader() {
-  // square art size that matches the mock and stays responsive
-  const tileSize = Math.min(W - scale(48), scale(334));
+	// Platform-tuned top spacing AFTER the safe area.
+	const HEADER_TOP = Platform.select({ ios: 12, android: 32, web: 24 });
 
-  return (
-    <SafeAreaView style={styles.safe}>
-      {/* Content wrapper with horizontal padding */}
-      <View style={styles.content}>
-        {/* Header row */}
-        <View style={styles.headerRow}>
-          <TouchableOpacity>
-            <Text style={styles.chevron}>‹</Text>
-          </TouchableOpacity>
+	return (
+		<SafeAreaView style={styles.safe} edges={['top', 'left', 'right']}>
+			<ScrollView
+				contentContainerStyle={styles.scrollContent}
+				keyboardShouldPersistTaps="handled"
+				showsVerticalScrollIndicator={false}
+			>
+				<View style={[styles.page, { maxWidth: isTablet ? 640 : '100%' }]}>
+					{/* Header with Back button */}
+					<View style={[styles.header, { marginTop: HEADER_TOP }]}>
+						<TouchableOpacity
+							onPress={() => router.back()}
+							style={styles.backBtn}
+							hitSlop={{ top: 10, left: 10, right: 10, bottom: 10 }}
+							activeOpacity={0.7}
+						>
+							<Ionicons name="arrow-back" size={24} color={P.text} />
+						</TouchableOpacity>
+						<Text style={[styles.headerTitle, { fontSize: isTablet ? 23 : 19 }]}>
+							Enable online booking on Octomarket
+						</Text>
+					</View>
 
-          <Text style={styles.headerTitle}>
-            Enable online booking on Octomarket
-          </Text>
-        </View>
+					{/* Body copy */}
+					<Text style={styles.subtext}>
+						By enabling online bookings with us, your venue will be listed on your marketplace and
+						you will be discoverable by potential clients
+					</Text>
 
-        {/* Body copy */}
-        <Text style={styles.copy}>
-          By enabling online bookings with us, your venue will be listed on your
-          marketplace and you will be discoverable by potential clients
-        </Text>
+					<Image source={require("@/assets/images/booking-phone.png")} style={styles.artImage} />
 
-        {/* ---- Artwork section (single image + bottom fade) ---- */}
-        <View style={[styles.artWrap, { width: tileSize, height: tileSize }]}>
-          <Image
-            // ⬇️ Replace with your local composite image (gradient + phone + pill)
-            source={require("@/assets/images/booking-phone.png")}
-            style={styles.artImage}
-          />
-
-          {/* White fade overlay at the bottom */}
-          <LinearGradient
-            colors={["transparent", "rgba(255,255,255,0.1)", "#fff"]}
-            start={{ x: 0.5, y: 0.6 }}
-            end={{ x: 0.5, y: 1 }}
-            style={styles.fadeBottom}
-          />
-        </View>
-        {/* ---- /Artwork section ---- */}
-      </View>
-    </SafeAreaView>
-  );
+					{/* Continue Button */}
+					<TouchableOpacity
+						style={styles.cta}
+						onPress={() => router.push('/(main)/home')}
+						activeOpacity={0.9}
+					>
+						<Text style={styles.ctaText}>Enable</Text>
+					</TouchableOpacity>
+					<TouchableOpacity onPress={() => router.push('/(main)/home')} activeOpacity={0.8}>
+						<Text style={styles.skipText}>Skip</Text>
+					</TouchableOpacity>
+				</View>
+			</ScrollView>
+		</SafeAreaView>
+	);
 }
 
 const styles = StyleSheet.create({
-  safe: {
-    flex: 1,
-    backgroundColor: "#fff",
-  },
-  content: {
-    flex: 1,
-    paddingHorizontal: scale(16),
-    paddingTop: scale(15),
-  },
-  headerRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginBottom: scale(12),
-  },
-  chevron: {
-    fontSize: scale(28),
-    color: TEXT,
-    marginRight: scale(12),
-    lineHeight: scale(28),
-  },
-  headerTitle: {
-    flex: 1,
-    fontSize: scale(18),
-    lineHeight: scale(24),
-    fontWeight: "400",
-    color: TEXT,
-  },
-  copy: {
-    fontSize: scale(12),
-    lineHeight: scale(20),
-    color: SUBTEXT,
-  },
+	safe: { flex: 1, backgroundColor: '#fff' },
 
-  // --- Artwork styles ---
-  artWrap: {
-    alignSelf: "center",
-    borderRadius: scale(22),
-    overflow: "hidden", // ensures image corners round + fade clips
-    marginTop: scale(18),
-  },
-  artImage: {
-    width: "100%",
-    height: "100%",
-    resizeMode: "cover", // image already includes the gradient background
-  },
-  fadeBottom: {
-    position: "absolute",
-    left: 0,
-    right: 0,
-    bottom: -1,
-    height: "40%", // adjust if you want more/less fade
-  },
+	// Always 16 horizontal padding (as requested) and enough bottom space for the CTA.
+	scrollContent: {
+		flexGrow: 1,
+		paddingHorizontal: 16,
+		paddingBottom: 32,
+	},
+
+	// Center the “page” on tablets/web for better readability.
+	page: {
+		width: '100%',
+		alignSelf: 'center',
+	},
+
+	header: {
+		flexDirection: 'row',
+		alignItems: 'center',
+		marginBottom: 24,
+	},
+	backBtn: {
+		marginRight: 12,
+		padding: 6,
+	},
+	headerTitle: {
+		fontWeight: '400',
+		color: P.text,
+	},
+
+	cta: {
+		backgroundColor: P.purple,
+		paddingVertical: 14,
+		borderRadius: 10,
+		alignItems: 'center',
+		...(Platform.OS === 'ios'
+			? {
+				shadowColor: '#000',
+				shadowOpacity: 0.1,
+				shadowRadius: 6,
+				shadowOffset: { width: 0, height: 3 },
+			}
+			: { elevation: 2 }),
+	},
+	ctaText: {
+		color: '#fff',
+		fontSize: 18,
+		fontWeight: '600',
+	},
+	skipText: {
+		color: P.orange,
+		fontSize: 15,
+		textAlign: "center",
+		marginTop: 20,
+		fontWeight: '600',
+	},
+	subtext: {
+		fontSize: 15,
+		lineHeight: 20,
+		color: P.text,
+		marginBottom: 70,
+	},
+	artImage: {
+		width: "75%",
+		height: "43%",
+		resizeMode: "cover",
+		alignSelf: "center",
+		borderRadius: 30,
+		marginBottom: 120,
+	},
 });
