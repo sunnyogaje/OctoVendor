@@ -1,17 +1,17 @@
+import { Ionicons } from '@expo/vector-icons';
+import { useRouter } from 'expo-router';
 import React from 'react';
 import {
-  View,
+  Platform,
+  ScrollView,
+  StyleSheet,
   Text,
   TextInput,
   TouchableOpacity,
-  StyleSheet,
-  ScrollView,
-  Platform,
   useWindowDimensions,
+  View,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Ionicons } from '@expo/vector-icons';
-import { useRouter } from 'expo-router';
 
 const P = {
   purple: '#4A154B',
@@ -100,7 +100,7 @@ export default function PersonalDetails() {
           {/* Continue Button */}
           <TouchableOpacity
             style={styles.cta}
-            onPress={() => router.push('./EnableBookingScreen')}
+            onPress={() => router.push('./appointment')}
             activeOpacity={0.9}
           >
             <Text style={styles.ctaText}>Continue</Text>
