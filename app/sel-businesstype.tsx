@@ -106,7 +106,7 @@ export default function BusinessTypeScreen() {
           {/* ✅ Continue Button (scrolls away with content) */}
           <TouchableOpacity
             style={[styles.button, !selected && { opacity: 0.5 }]}
-            onPress={() => console.log("Selected:", selected)}
+            onPress={() => router.push("./EnableBookingScreen")}
             disabled={!selected}
           >
             <Text style={styles.buttonText}>Continue</Text>
