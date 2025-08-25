@@ -13,7 +13,7 @@ export default function BusinessInfoScreen() {
 	const isTablet = width >= 768;
 
   // Platform-tuned top spacing AFTER the safe area.
-const HEADER_TOP = Platform.select({ ios: 12, android: 40, web: 24 });
+const HEADER_TOP = Platform.select({ ios: 12, android: 32, web: 24});
 
 	// Input height tuned per platform for consistent feel.
 	const INPUT_H = Platform.select({ ios: 52, android: 50, web: 48 });

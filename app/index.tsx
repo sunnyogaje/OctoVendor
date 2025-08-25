@@ -20,17 +20,17 @@ export default function Index() {
         if (!hasLaunched) {
           await AsyncStorage.setItem("hasLaunched", "true");
           // router.push("./onboarding");
-          router.push("./landing");
-          // router.push("/(main)/home");
+          // router.push("./landing");
+          router.push("/(main)/home");
         } else {
           const userToken = await AsyncStorage.getItem("userToken");
-          router.push(userToken ? "./(main)/home" : "./landing");
-          // router.push(userToken ? "/(main)/home" : "/(main)/home");
+          // router.push(userToken ? "./(main)/home" : "./landing");
+          router.push(userToken ? "/(main)/home" : "/(main)/home");
         }
       } catch (error) {
         console.warn("App start error:", error);
-        router.push("./landing");
-        // router.push("/(main)/home");
+        // router.push("./landing");
+        router.push("/(main)/home");
       } finally {
         setIsReady(true); // UI loads while routing completes
         await SplashScreen.hideAsync();

@@ -153,15 +153,20 @@ export default function LoyaltyPoints() {
           />
         </View>
 
-        {/* Empty state */}
-        <View style={styles.emptyWrap}>
-          <Text style={styles.emptyTitle}>
-            Activate your loyalty program to start{'\n'}Issuing points
-          </Text>
-
-          <TouchableOpacity style={styles.activateBtn} activeOpacity={0.9} onPress={() => router.push("/activatePoints/activate")}>
-            <Text style={styles.activateText}>Activate</Text>
-          </TouchableOpacity>
+        {/* List */}
+        <View style={styles.listCard}>
+          {list.map((item, i) => {
+            const last = i === list.length - 1;
+            return (
+              <View key={item.id} style={[styles.row, !last && styles.rowDivider]}>
+                <View style={{ flex: 1, paddingRight: 10 }}>
+                  <Text style={styles.rowTitle}>{item.title}</Text>
+                  <Text style={styles.rowSub}>Order {item.order}</Text>
+                </View>
+                <Text style={styles.rowWhen}>{item.when}</Text>
+              </View>
+            );
+          })}
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -252,18 +257,12 @@ const styles = StyleSheet.create({
   },
   searchIcon: { position: 'absolute', left: 12, top: 10 },
   searchInput: { paddingLeft: 50, paddingRight: 14, height: 44, fontSize: 15, color: P.text },
-  // Empty state
-  emptyWrap: { alignItems: 'center', paddingTop: 24, paddingBottom: 28, paddingHorizontal: 16 },
-  emptyTitle: { fontSize: 19, lineHeight: 24, color: P.text, textAlign: 'center', fontWeight: '600', marginBottom: 22 },
 
-  activateBtn: {
-    backgroundColor: P.purple,
-    paddingVertical: 14,
-    paddingHorizontal: 28,
-    borderRadius: 10,
-    ...(Platform.OS === 'ios'
-      ? { shadowColor: '#000', shadowOpacity: 0.1, shadowRadius: 6, shadowOffset: { width: 0, height: 3 } }
-      : { elevation: 2 }),
-  },
-  activateText: { color: '#fff', fontSize: 16, fontWeight: '700' },
+  // List
+  listCard: { width: '100%', borderRadius: 14, backgroundColor: '#fff' },
+  row: { flexDirection: 'row', alignItems: 'center', paddingVertical: 16 },
+  rowDivider: { borderBottomWidth: StyleSheet.hairlineWidth, borderBottomColor: '#EEE' },
+  rowTitle: { fontSize: 17, fontWeight: '400', color: P.text, marginBottom: 4 },
+  rowSub: { fontSize: 14, color: '#8A8FA3' },
+  rowWhen: { fontSize: 14, color: '#6B7280' },
 });
