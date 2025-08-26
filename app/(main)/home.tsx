@@ -1,5 +1,6 @@
 import { Ionicons } from '@expo/vector-icons';
-import React, { useRef, useState } from 'react';
+import { useRouter } from "expo-router";
+import { useRef, useState } from 'react';
 import {
   Animated,
   Easing,
@@ -18,7 +19,6 @@ import {
 } from 'react-native';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import Svg, { Path } from 'react-native-svg';
-import { useRouter } from "expo-router";
 
 /* ---------------- Sparkline ---------------- */
 function Sparkline() {
@@ -134,6 +134,9 @@ export default function DashboardHeaderOnly() {
         <View style={[styles.page, { maxWidth: isTablet ? 680 : '100%' }]}>
           {/* HEADER */}
           <View style={styles.headerRow}>
+
+           <TouchableOpacity onPress={() => router.push('./account/account')} >
+                     
             <View style={styles.avatar}>
               <Image
                 source={require('@/assets/images/profile/profileImg.png')}
@@ -141,6 +144,7 @@ export default function DashboardHeaderOnly() {
                 resizeMode="cover"
               />
             </View>
+           </TouchableOpacity>
 
             <View style={styles.centerOverlay} pointerEvents="none">
               <Text style={styles.title}>Dashboard</Text>

@@ -2,25 +2,34 @@ import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import {
-    Image,
-    Platform,
-    SafeAreaView,
-    ScrollView,
-    StyleSheet,
-    Text,
-    TouchableOpacity,
-    View,
-    useWindowDimensions,
+  Image,
+  Platform,
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  useWindowDimensions,
 } from "react-native";
 
-// ✅ Use PNG/JPG instead of SVG (React Native doesn’t handle raw .svg without extra libs)
 const ICONS = {
-  food: require("@/assets/icons/food.png"), // replace with your PNG/JPG version of food icon
+  food: require("@/assets/icons/food.png"),
 };
 
 const OPTIONS = [
   { id: "food", label: "Food Deliveries", icon: ICONS.food },
-  { id: "supermarket", label: "Supermarket (Distributors)", icon: "storefront-outline" },
+  {
+    id: "supermarket",
+    label: "Supermarket",
+    icon: "storefront-outline",
+    children: [
+      { id: "distributor", label: "Distributor" },
+      { id: "sub-distributor", label: "Sub- Distributor" },
+      { id: "wholesaler", label: "Wholesaler" },
+      { id: "retailer", label: "Retailer" },
+    ],
+  },
   { id: "buka", label: "Buka", icon: "storefront-outline" },
   { id: "kiosk", label: "Kiosk", icon: "storefront-outline" },
   { id: "restaurants", label: "Restaurants", icon: "storefront-outline" },
@@ -36,7 +45,20 @@ export default function BusinessTypeScreen() {
 
   const HEADER_TOP = Platform.select({ ios: 12, android: 40, web: 24 });
 
-  const [selected, setSelected] = useState<string>("supermarket"); // ✅ preselect supermarket
+  const [selected, setSelected] = useState<string | null>(null);
+  const [selectedParent, setSelectedParent] = useState<string | null>(null);
+  const [expanded, setExpanded] = useState<string | null>(null);
+
+  // helper to show label with bracket if sub is selected
+  const getOptionLabel = (opt: any) => {
+    if (opt.id === selectedParent && selected) {
+      const child = opt.children?.find((c: any) => c.id === selected);
+      if (child) {
+        return `${opt.label} (${child.label})`;
+      }
+    }
+    return opt.label;
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -67,46 +89,83 @@ export default function BusinessTypeScreen() {
           {/* Options */}
           <View style={styles.optionsWrapper}>
             {OPTIONS.map((opt) => (
-              <TouchableOpacity
-                key={opt.id}
-                style={[
-                  styles.optionCard,
-                  selected === opt.id && styles.optionCardSelected,
-                ]}
-                onPress={() => setSelected(opt.id)}
-                activeOpacity={0.8}
-              >
-                <View style={styles.optionLeft}>
-                  {typeof opt.icon === "string" ? (
-                    <MaterialCommunityIcons
-                      name={opt.icon as any}
-                      size={24}
-                      color="#4A154B"
-                    />
-                  ) : (
-                    <Image
-                      source={opt.icon}
-                      style={styles.optionIcon}
-                      resizeMode="contain"
-                    />
-                  )}
-                  <Text style={styles.optionLabel}>{opt.label}</Text>
-                </View>
+              <View key={opt.id}>
+                <TouchableOpacity
+                  style={[
+                    styles.optionCard,
+                    (selected === opt.id || selectedParent === opt.id) &&
+                      styles.optionCardSelected,
+                  ]}
+                  onPress={() => {
+                    if (opt.children) {
+                      setExpanded(expanded === opt.id ? null : opt.id);
+                    } else {
+                      setSelected(opt.id);
+                      setSelectedParent(null);
+                    }
+                  }}
+                  activeOpacity={0.8}
+                >
+                  <View style={styles.optionLeft}>
+                    {typeof opt.icon === "string" ? (
+                      <MaterialCommunityIcons
+                        name={opt.icon as any}
+                        size={24}
+                        color="#4A154B"
+                      />
+                    ) : (
+                      <Image
+                        source={opt.icon}
+                        style={styles.optionIcon}
+                        resizeMode="contain"
+                      />
+                    )}
+                    <Text style={styles.optionLabel}>{getOptionLabel(opt)}</Text>
+                  </View>
 
-                <View style={styles.radioOuter}>
-                  {selected === opt.id && <View style={styles.radioInner} />}
-                </View>
-              </TouchableOpacity>
+                  <View style={styles.radioOuter}>
+                    {(selected === opt.id || selectedParent === opt.id) && (
+                      <View style={styles.radioInner} />
+                    )}
+                  </View>
+                </TouchableOpacity>
+
+                {/* Sub-options */}
+                {opt.children && expanded === opt.id && (
+                  <View style={{ marginLeft: 20, marginTop: 8 }}>
+                    {opt.children.map((child) => (
+                      <TouchableOpacity
+                        key={child.id}
+                        style={[
+                          styles.optionCard,
+                          selected === child.id && styles.optionCardSelected,
+                        ]}
+                        onPress={() => {
+                          setSelected(child.id);
+                          setSelectedParent(opt.id);
+                        }}
+                        activeOpacity={0.8}
+                      >
+                        <Text style={styles.optionLabel}>{child.label}</Text>
+                        <View style={styles.radioOuter}>
+                          {selected === child.id && (
+                            <View style={styles.radioInner} />
+                          )}
+                        </View>
+                      </TouchableOpacity>
+                    ))}
+                  </View>
+                )}
+              </View>
             ))}
-
-            {/* Empty card placeholder */}
-            <View style={styles.optionCard} />
           </View>
 
-          {/* ✅ Continue Button (scrolls away with content) */}
+          {/* Continue Button */}
           <TouchableOpacity
             style={[styles.button, !selected && { opacity: 0.5 }]}
-            onPress={() => router.push("./EnableBookingScreen")}
+            onPress={() =>
+              router.push('./EnableBookingScreen')
+            }
             disabled={!selected}
           >
             <Text style={styles.buttonText}>Continue</Text>
@@ -118,38 +177,17 @@ export default function BusinessTypeScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-  },
+  container: { flex: 1, backgroundColor: "#fff" },
   scrollContent: {
     flexGrow: 1,
     paddingHorizontal: 20,
-    paddingBottom: 60, // ✅ ensures you can scroll past the button
+    paddingBottom: 60,
   },
-  page: {
-    width: "100%",
-    alignSelf: "center",
-  },
-  header: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginBottom: 24,
-  },
-  backBtn: {
-    marginRight: 12,
-    padding: 6,
-  },
-  headerTitle: {
-    fontSize: 18,
-    fontWeight: "600",
-    color: "#111827",
-  },
-  progressText: {
-    fontSize: 16,
-    marginBottom: 8,
-    color: "#111827",
-  },
+  page: { width: "100%", alignSelf: "center" },
+  header: { flexDirection: "row", alignItems: "center", marginBottom: 24 },
+  backBtn: { marginRight: 12, padding: 6 },
+  headerTitle: { fontSize: 18, fontWeight: "600", color: "#111827" },
+  progressText: { fontSize: 16, marginBottom: 8, color: "#111827" },
   progressBar: {
     width: "100%",
     height: 8,
@@ -158,19 +196,13 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   progressFill: {
-    width: "100%", // ✅ 3/3 progress
+    width: "100%",
     height: "100%",
     backgroundColor: "#6366F1",
     borderRadius: 3,
   },
-  optionsWrapper: {
-    marginBottom: 40,
-  },
-  optionIcon: {
-    width: 24,
-    height: 24,
-    tintColor: "#4A154B", // ✅ applies purple filter
-  },
+  optionsWrapper: { marginBottom: 40 },
+  optionIcon: { width: 24, height: 24, tintColor: "#4A154B" },
   optionCard: {
     borderWidth: 1,
     borderColor: "#E5E7EB",
@@ -182,18 +214,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
     minHeight: 56,
   },
-  optionCardSelected: {
-    borderColor: "#4A154B",
-  },
-  optionLeft: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 12,
-  },
-  optionLabel: {
-    fontSize: 16,
-    color: "#111827",
-  },
+  optionCardSelected: { borderColor: "#4A154B" },
+  optionLeft: { flexDirection: "row", alignItems: "center", gap: 12 },
+  optionLabel: { fontSize: 16, color: "#111827" },
   radioOuter: {
     width: 20,
     height: 20,
@@ -216,9 +239,5 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginTop: 20,
   },
-  buttonText: {
-    color: "#fff",
-    fontWeight: "600",
-    fontSize: 16,
-  },
+  buttonText: { color: "#fff", fontWeight: "600", fontSize: 16 },
 });

@@ -1,6 +1,12 @@
 // app/(main)/products.tsx
-import React, { useMemo, useState } from "react";
+import { Ionicons } from "@expo/vector-icons";
+import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
+import { useRouter } from "expo-router";
+import { useMemo, useState } from "react";
 import {
+  Dimensions,
+  FlatList,
+  Image,
   Platform,
   ScrollView,
   StyleSheet,
@@ -8,14 +14,8 @@ import {
   TextInput,
   TouchableOpacity,
   View,
-  Image,
-  FlatList,
-  Dimensions,
 } from "react-native";
 import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
-import { Ionicons } from "@expo/vector-icons";
-import { useRouter } from "expo-router";
-import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 
 const P = {
   purple: "#4A154B",
@@ -190,7 +190,7 @@ export default function ProductsScreen() {
           </View>
 
           <TouchableOpacity 
-          // onPress={() => router.push("/products/new")} 
+          onPress={() => router.push("/products/new")} 
           style={styles.addBtn} activeOpacity={0.85}>
             <Ionicons name="add" size={22} color="#fff" />
           </TouchableOpacity>
