@@ -264,13 +264,15 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#E0CFF7",
     borderRadius: 8,
-    paddingVertical: 6,
+    paddingVertical: 5,
     paddingHorizontal: 5,
   },
   smallBtnText: {
     marginLeft: 5,
-    color: "#6A1B9A",
-    fontWeight: "500",
+    color: "#111827",
+    fontWeight: "400",
+    fontSize:12,
+    fontFamily:'Lato',
   },
   circleBtn: {
     width: 36,
