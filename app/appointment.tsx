@@ -1,7 +1,10 @@
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import React, { useState } from 'react';
-import { Platform, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View, useWindowDimensions } from 'react-native';
+import { Platform, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View, useWindowDimensions }
+ from 'react-native';
+
+ 
 export default function BusinessInfoScreen() {
   const [businessName, setBusinessName] = useState('');
   const [address, setAddress] = useState('');

@@ -2,6 +2,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { useState } from "react";
 import {
+  Image,
   Platform,
   SafeAreaView,
   ScrollView,
@@ -9,12 +10,15 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
-  View,
+  View
 } from "react-native";
+
+ import UploadIcon from '@/assets/icons/upload.png';
 
 export default function AddProduct() {
   const [portionToggle, setPortionToggle] = useState(false);
    const router = useRouter();
+     const [price, setPrice] = useState("");
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#fff" }}>
@@ -61,6 +65,14 @@ export default function AddProduct() {
             placeholderTextColor="#aaa"
             multiline
           />
+
+          <Text style={styles.label}>Product Details</Text>
+          <TextInput
+            style={[styles.textArea]}
+            placeholder=""
+            placeholderTextColor="#aaa"
+            multiline
+          />
         </View>
 
         {/* Media Section */}
@@ -68,20 +80,33 @@ export default function AddProduct() {
           <Text style={styles.sectionTitle}>Media</Text>
 
           <TouchableOpacity style={styles.mediaBox}>
-            <Ionicons name="image-outline" size={40} color="#999" />
+            {/* <Ionicons name="image-outline" size={40} color="#999" /> */}
+              <Image 
+              source={UploadIcon} 
+              style={{ width: 40, height: 40, tintColor: "#999" }} 
+            />
+
             <Text style={styles.mediaText}>Add image</Text>
             <Text style={styles.mediaSubText}>(Not more than 5mb size)</Text>
           </TouchableOpacity>
 
           <TouchableOpacity style={styles.mediaBox}>
-            <Ionicons name="image-outline" size={40} color="#999" />
+            {/* <Ionicons name="image-outline" size={40} color="#999" /> */}
+            <Image 
+              source={UploadIcon} 
+              style={{ width: 40, height: 40, tintColor: "#999" }} 
+            />
+
             <Text style={styles.mediaText}>Add video</Text>
             <Text style={styles.mediaSubText}>(Not more than 10mb size)</Text>
           </TouchableOpacity>
 
           <View style={styles.row}>
-            <TouchableOpacity style={styles.smallBtn}>
-              <Ionicons name="image-outline" size={16} color="#6A1B9A" />
+            <TouchableOpacity style={[styles.smallBtn, { flexDirection: "column" }]}>
+              <Image 
+                source={UploadIcon} 
+                style={{ width: 20, height: 20, tintColor: "#999", marginBottom: 4 }} 
+              />
               <Text style={styles.smallBtnText}>Add image</Text>
             </TouchableOpacity>
 
@@ -118,6 +143,21 @@ export default function AddProduct() {
             </View>
           </View>
         )}
+
+
+         {/* Price Input (last field) */}
+        <View style={styles.inputBoxAmount}>
+          <Ionicons name="pricetag-outline" size={18} color="#6A1B9A" />
+          <TextInput
+            placeholder="Enter Price"
+            placeholderTextColor="#999"
+            keyboardType="numeric"
+            style={styles.textInput}
+            value={price}
+            onChangeText={setPrice}
+          />
+        </View>
+
 
         {/* Button */}
         <TouchableOpacity style={styles.submitBtn}>
@@ -158,6 +198,18 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     paddingVertical: 6,
     marginBottom: 12,
+  },
+
+    inputBoxAmount: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    borderWidth: 1,
+    borderColor: "#E0CFF7",
+    borderRadius: 8,
+    paddingHorizontal: 10,
+    paddingVertical: 6,
+    margin: 15,
   },
   textInput: {
     flex: 1,
@@ -213,7 +265,7 @@ const styles = StyleSheet.create({
     borderColor: "#E0CFF7",
     borderRadius: 8,
     paddingVertical: 6,
-    paddingHorizontal: 10,
+    paddingHorizontal: 5,
   },
   smallBtnText: {
     marginLeft: 5,
