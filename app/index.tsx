@@ -21,16 +21,16 @@ export default function Index() {
           await AsyncStorage.setItem("hasLaunched", "true");
           // router.push("./onboarding");
           // router.push("./landing");
-          router.push("/(main)/home");
+          router.push("/landing");
         } else {
           const userToken = await AsyncStorage.getItem("userToken");
           // router.push(userToken ? "./(main)/home" : "./landing");
-          router.push(userToken ? "/(main)/home" : "/(main)/home");
+          router.push(userToken ? "/landing" : "/landing");
         }
       } catch (error) {
         console.warn("App start error:", error);
         // router.push("./landing");
-        router.push("/(main)/home");
+        router.push("/landing");
       } finally {
         setIsReady(true); // UI loads while routing completes
         await SplashScreen.hideAsync();

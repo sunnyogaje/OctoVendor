@@ -1,10 +1,12 @@
 import { Ionicons } from "@expo/vector-icons";
+import DateTimePicker from "@react-native-community/datetimepicker";
 import * as ImagePicker from "expo-image-picker";
 import { useRouter } from "expo-router";
 import { useState } from "react";
 import {
   Image,
   Platform,
+  Pressable,
   SafeAreaView,
   ScrollView,
   StyleSheet,
@@ -23,7 +25,7 @@ type Day =
   | "Saturday"
   | "Sunday";
 
-// ✅ Custom Toggle Switch
+// Custom Toggle Switch
 const CustomSwitch = ({
   value,
   onValueChange,
@@ -51,29 +53,48 @@ const CustomSwitch = ({
 };
 
 export default function StoreInformation() {
-  const [days, setDays] = useState<Record<Day, boolean>>({
-    Monday: true,
-    Tuesday: true,
-    Wednesday: true,
-    Thursday: true,
-    Friday: true,
-    Saturday: true,
-    Sunday: true,
+  const [storeName, setStoreName] = useState("");
+  const [storeDescription, setStoreDescription] = useState("");
+  const [storeAddress, setStoreAddress] = useState("");
+  const [storePhone, setStorePhone] = useState("");
+  const [storeEmail, setStoreEmail] = useState("");
+
+  const [hours, setHours] = useState<
+    Record<Day, { open: boolean; start: string; end: string }>
+  >({
+    Monday: { open: true, start: "08:00 AM", end: "06:00 PM" },
+    Tuesday: { open: true, start: "08:00 AM", end: "06:00 PM" },
+    Wednesday: { open: true, start: "08:00 AM", end: "06:00 PM" },
+    Thursday: { open: true, start: "08:00 AM", end: "06:00 PM" },
+    Friday: { open: true, start: "08:00 AM", end: "06:00 PM" },
+    Saturday: { open: true, start: "09:00 AM", end: "06:00 PM" },
+    Sunday: { open: true, start: "09:00 AM", end: "06:00 PM" },
   });
 
   const [logo, setLogo] = useState<string | null>(null);
 
+  const router = useRouter();
+
+  // Toggle open/close
   const toggleDay = (day: Day) => {
-    setDays((prevDays) => ({
-      ...prevDays,
-      [day]: !prevDays[day],
+    setHours((prev) => ({
+      ...prev,
+      [day]: { ...prev[day], open: !prev[day].open },
     }));
   };
-    const router = useRouter();
 
-  // ✅ Pick image from gallery
+  // Update start/end time
+  const updateTime = (day: Day, field: "start" | "end", value: string) => {
+    setHours((prev) => ({
+      ...prev,
+      [day]: { ...prev[day], [field]: value },
+    }));
+  };
+
+  // Image picker
   const pickImage = async () => {
-    const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    const permissionResult =
+      await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (!permissionResult.granted) {
       alert("Permission to access gallery is required!");
       return;
@@ -91,17 +112,47 @@ export default function StoreInformation() {
     }
   };
 
+  //  Time Picker
+  const [showPicker, setShowPicker] = useState<{
+    day: Day | null;
+    field: "start" | "end" | null;
+  }>({ day: null, field: null });
+
+  const [pickerTime, setPickerTime] = useState(new Date());
+
+  const openTimePicker = (day: Day, field: "start" | "end") => {
+    setShowPicker({ day, field });
+    setPickerTime(new Date());
+  };
+
+  const onChangeTime = (event: any, selectedDate?: Date) => {
+    if (event.type === "dismissed") {
+      setShowPicker({ day: null, field: null });
+      return;
+    }
+    if (selectedDate && showPicker.day && showPicker.field) {
+      const formatted = selectedDate.toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit",
+      });
+      updateTime(showPicker.day, showPicker.field, formatted);
+    }
+    setShowPicker({ day: null, field: null });
+  };
+
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#fff" }}>
       <ScrollView
         contentContainerStyle={[
-          { paddingBottom: 100 },
+          { paddingBottom: 100,paddingHorizontal: 18, },
           { paddingTop: Platform.select({ ios: 12, android: 40, web: 24 }) },
         ]}
       >
         {/* Header */}
         <View style={styles.header}>
-           <TouchableOpacity onPress={() => router.push('/(main)/account/account')}  >
+          <TouchableOpacity
+            onPress={() => router.push("/(main)/food/account/account")}
+          >
             <Ionicons name="arrow-back" size={22} color="#000" />
           </TouchableOpacity>
           <Text style={styles.headerText}>Store Information</Text>
@@ -135,6 +186,8 @@ export default function StoreInformation() {
           style={styles.input}
           placeholder="Hannah Famodimu"
           placeholderTextColor="#aaa"
+          value={storeName}
+          onChangeText={setStoreName}
         />
 
         {/* Store Description */}
@@ -144,18 +197,29 @@ export default function StoreInformation() {
           placeholder="Brief description of what you offer"
           placeholderTextColor="#aaa"
           multiline
+          value={storeDescription}
+          onChangeText={setStoreDescription}
         />
 
         {/* Store Address */}
         <Text style={styles.label}>Store address</Text>
-        <TextInput style={styles.input} placeholder="Address" />
+        <TextInput
+          style={styles.input}
+          placeholder="Address"
+          placeholderTextColor="#aaa"
+          value={storeAddress}
+          onChangeText={setStoreAddress}
+        />
 
         {/* Store Phone Number */}
         <Text style={styles.label}>Store phone number</Text>
         <TextInput
           style={styles.input}
           placeholder="090054956"
+          placeholderTextColor="#aaa"
           keyboardType="phone-pad"
+          value={storePhone}
+          onChangeText={setStorePhone}
         />
 
         {/* Store Email */}
@@ -163,25 +227,48 @@ export default function StoreInformation() {
         <TextInput
           style={styles.input}
           placeholder="foood@co.com"
+          placeholderTextColor="#aaa"
           keyboardType="email-address"
+          value={storeEmail}
+          onChangeText={setStoreEmail}
         />
 
         {/* Operating Hours */}
         <Text style={[styles.sectionTitle, { marginTop: 20 }]}>
           Operating hours
         </Text>
-        {(Object.keys(days) as Day[]).map((day, index) => (
+        {(Object.keys(hours) as Day[]).map((day, index) => (
           <View key={index} style={styles.dayRow}>
-            <View>
+            <View style={{ flex: 1 }}>
               <Text style={styles.dayText}>{day}</Text>
-              <Text style={styles.timeText}>
-                {day === "Saturday" || day === "Sunday"
-                  ? "9:00 AM - 6:00 PM"
-                  : "8:00 AM - 6:00 PM"}
-              </Text>
+
+              {hours[day].open ? (
+                <View style={styles.timeRow}>
+                  <Pressable
+                    style={styles.timeBox}
+                    onPress={() => openTimePicker(day, "start")}
+                  >
+                    <Text style={styles.timeTextValue}>
+                      {hours[day].start}
+                    </Text>
+                  </Pressable>
+
+                  <Text style={{ marginHorizontal: 5 }}>-</Text>
+
+                  <Pressable
+                    style={styles.timeBox}
+                    onPress={() => openTimePicker(day, "end")}
+                  >
+                    <Text style={styles.timeTextValue}>{hours[day].end}</Text>
+                  </Pressable>
+                </View>
+              ) : (
+                <Text style={styles.timeText}>Closed</Text>
+              )}
             </View>
+
             <CustomSwitch
-              value={days[day]}
+              value={hours[day].open}
               onValueChange={() => toggleDay(day)}
             />
           </View>
@@ -192,6 +279,17 @@ export default function StoreInformation() {
           <Text style={styles.updateInfoText}>Update information</Text>
         </TouchableOpacity>
       </ScrollView>
+
+      {/* Time Picker */}
+      {showPicker.day && showPicker.field && (
+        <DateTimePicker
+          value={pickerTime}
+          mode="time"
+          is24Hour={false}
+          display={Platform.OS === "ios" ? "spinner" : "default"}
+          onChange={onChangeTime}
+        />
+      )}
     </SafeAreaView>
   );
 }
@@ -270,6 +368,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 15,
     fontSize: 14,
     backgroundColor: "#fff",
+    color: "#000", // text visible
   },
   dayRow: {
     flexDirection: "row",
@@ -286,8 +385,29 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: "#666",
   },
+  timeRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginTop: 4,
+  },
+  timeBox: {
+    borderWidth: 1,
+    borderColor: "#ddd",
+    borderRadius: 6,
+    paddingVertical: 6,
+    paddingHorizontal: 12,
+    width: 90,
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#fff",
+  },
+  timeTextValue: {
+    fontSize: 13,
+    fontWeight: "500",
+    color: "#333",
+  },
   updateInfoBtn: {
-    backgroundColor: "#ccc",
+    backgroundColor: "#4A154B",
     paddingVertical: 15,
     borderRadius: 8,
     marginHorizontal: 15,

@@ -43,13 +43,13 @@ export default function CreateMenu() {
     <SafeAreaView style={styles.container}>
       <ScrollView
         contentContainerStyle={[
-          { paddingBottom: 100 },
+          { paddingBottom: 100 ,paddingHorizontal: 20,},
           { paddingTop: Platform.select({ ios: 12, android: 40, web: 24 }) },
         ]}
       >
         {/* Header */}
         <View style={styles.header}>
-          <TouchableOpacity onPress={() => router.push("/(main)/menu")}>
+          <TouchableOpacity onPress={() => router.push("/(main)/food/menu")}>
             <Ionicons name="arrow-back" size={24} color="#000" />
           </TouchableOpacity>
           <Text style={styles.headerTitle}>Create Menu</Text>

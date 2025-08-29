@@ -1,19 +1,19 @@
-import React from 'react';
-import {
-	View,
-	Text,
-	TextInput,
-	TouchableOpacity,
-	StyleSheet,
-	ScrollView,
-	Platform,
-	useWindowDimensions,
-	Image,
-} from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
-import { LinearGradient } from "expo-linear-gradient";
+import {
+	Image,
+	Platform,
+	ScrollView,
+	StyleSheet,
+	Text,
+	TouchableOpacity,
+	useWindowDimensions,
+	View
+} from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+
+import { useLocalSearchParams } from "expo-router";
+
 
 const P = {
 	purple: '#4A154B',
@@ -27,6 +27,7 @@ export default function PersonalDetails() {
 	const router = useRouter();
 	const { width } = useWindowDimensions();
 	const isTablet = width >= 768;
+	 const { businessType } = useLocalSearchParams();
 
 	// Platform-tuned top spacing AFTER the safe area.
 	const HEADER_TOP = Platform.select({ ios: 12, android: 32, web: 24 });
@@ -65,12 +66,30 @@ export default function PersonalDetails() {
 					{/* Continue Button */}
 					<TouchableOpacity
 						style={styles.cta}
-						onPress={() => router.push('/(main)/home')}
+						onPress={() => {
+								if (businessType === "food") {
+								  router.push("/(main)/food/home"); 
+								} else {
+								// default route if none match
+								router.push("/(main)/other/home"); 
+								}
+							}}
 						activeOpacity={0.9}
 					>
 						<Text style={styles.ctaText}>Enable</Text>
 					</TouchableOpacity>
-					<TouchableOpacity onPress={() => router.push('/(main)/home')} activeOpacity={0.8}>
+					<TouchableOpacity 
+					
+					onPress={() => {
+						if (businessType === "food") {
+							router.push("/(main)/food/home"); 
+						} else {
+						// default route if none match
+						router.push("/(main)/other/home"); 
+						}
+					}}
+					
+					activeOpacity={0.8}>
 						<Text style={styles.skipText}>Skip</Text>
 					</TouchableOpacity>
 				</View>

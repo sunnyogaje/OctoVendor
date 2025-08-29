@@ -28,7 +28,7 @@ export default function PersonalDetails() {
       ]}>
         {/* Header */}
         <View style={styles.header}>
-          <TouchableOpacity onPress={() => router.push('/(main)/account/account')}  >
+          <TouchableOpacity onPress={() => router.push('/(main)/food/account/account')}  >
             <Ionicons name="arrow-back" size={22} color="black" />
           </TouchableOpacity>
           <Text style={styles.headerTitle}>Personal Details</Text>

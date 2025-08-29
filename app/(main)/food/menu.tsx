@@ -224,10 +224,11 @@ export default function ProductsScreen() {
 
           {bottomTab === "Products" && (
             <TouchableOpacity
-              onPress={() => router.push("/products/new")}
+              onPress={() => router.push("/food/products/new")}
               style={styles.addBtn}
               activeOpacity={0.85}
             >
+              
               <Ionicons name="add" size={22} color="#fff" />
             </TouchableOpacity>
           )}
@@ -294,7 +295,7 @@ export default function ProductsScreen() {
         ) : (
           <View style={{ marginTop: 20 }}>
             {categories.map((cat) => (
-              <TouchableOpacity  key={cat.id}    onPress={() => router.push(`/(main)/menus/${cat.title}`)}>
+              <TouchableOpacity  key={cat.id}    onPress={() => router.push(`/(main)/food/menus/${cat.title}`)}>
                 <View key={cat.id} style={styles.catRow}>
                   <View style={{ flex: 1 }}>
                     <Text style={styles.catLabel}>Menu</Text>
@@ -308,7 +309,7 @@ export default function ProductsScreen() {
 
             {/* Add Menu button */}
             <View style={styles.addMenuWrapper}>
-              <TouchableOpacity style={styles.addMenuButton} onPress={() => router.push('/(main)/menus/add')}>
+              <TouchableOpacity style={styles.addMenuButton} onPress={() => router.push('/(main)/food/menus/add')}>
                 <Ionicons name="add" size={20} color={P.purple} />
                 <Text style={styles.addMenuText}>Add Menu</Text>
               </TouchableOpacity>

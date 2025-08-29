@@ -30,7 +30,7 @@ export default function AddProduct() {
       >
         {/* Header */}
         <View style={styles.header}>
-          <TouchableOpacity onPress={() => router.push('/(main)/menu')}  >
+          <TouchableOpacity onPress={() => router.push('/(main)/food/menu')}  >
              <Ionicons name="arrow-back" size={22} color="#000" />
           </TouchableOpacity>
           <Text style={styles.headerText}>Add product</Text>

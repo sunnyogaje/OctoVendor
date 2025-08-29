@@ -2,15 +2,15 @@ import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import React from "react";
 import {
-    Image,
-    Platform,
-    SafeAreaView,
-    ScrollView,
-    StyleSheet,
-    Text,
-    TouchableOpacity,
-    useWindowDimensions,
-    View
+  Image,
+  Platform,
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  useWindowDimensions,
+  View
 } from "react-native";
 /**
  * Responsive helpers
@@ -40,7 +40,7 @@ export default function AccountScreen() {
         {/* Header */}
         <View style={styles.header}>
           <TouchableOpacity
-           onPress={() => router.back()} 
+           onPress={() => router.push('/(main)/food/account/account')} 
           style={styles.backBtn} activeOpacity={0.7}>
             <Ionicons name="arrow-back" size={s(22)} color="#111827" />
           </TouchableOpacity>
@@ -92,7 +92,7 @@ export default function AccountScreen() {
           size={s} 
           icon={<Ionicons name="person-outline" size={s(20)} color="#111827" />} 
           label="Personal Information" 
-          onPress={() => router.push("/account/profile/profile")}
+          onPress={() => router.push("/(main)/food/account/profile/profile")}
         />
          {/* Section: Store */}
         <Text style={[styles.sectionTitle, { fontSize: s(14), marginTop: s(8), marginBottom: s(10) }]}>
@@ -104,7 +104,7 @@ export default function AccountScreen() {
           size={s} 
           icon={<MaterialCommunityIcons name="storefront-outline" size={s(20)} color="#111827" />} 
           label="Store Information" 
-          onPress={() => router.push("/account/store/store-info")}
+          onPress={() => router.push("/(main)/food/account/store/store-info")}
         />
         <CardRow
           iconBg
@@ -123,14 +123,14 @@ export default function AccountScreen() {
           size={s} 
           icon={<MaterialCommunityIcons name="truck-delivery-outline" size={s(20)} color="#111827" />} 
           label="Delivery" 
-          onPress={() => router.push("/account/delivery/settings")}
+          onPress={() => router.push("/(main)/food/account/delivery/settings")}
         />
         <CardRow 
           iconBg 
           size={s} 
           icon={<Ionicons name="sparkles-outline" size={s(20)} color="#111827" />} 
           label="Menu" 
-          onPress={() => router.push("/menu")}
+          onPress={() => router.push("/(main)/food/menu")}
         />
         <CardRow 
           iconBg 

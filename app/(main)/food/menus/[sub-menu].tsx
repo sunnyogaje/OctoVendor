@@ -2,16 +2,16 @@ import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { useState } from "react";
 import {
-    FlatList,
-    Image,
-    ImageSourcePropType,
-    Platform,
-    SafeAreaView,
-    StyleSheet,
-    Text,
-    TextInput,
-    TouchableOpacity,
-    View,
+  FlatList,
+  Image,
+  ImageSourcePropType,
+  Platform,
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
 } from "react-native";
 
 import EditIcon from '@/components/icons/AddrsbookEdit';
@@ -58,7 +58,7 @@ export default function App() {
     <>
       {/* Header */}
       <View style={styles.header}>
-         <TouchableOpacity  onPress={() => router.push('/(main)/menu')}>
+         <TouchableOpacity  onPress={() => router.push('/(main)/food/menu')}>
              <Ionicons name="arrow-back" size={22} color="black" />
         </TouchableOpacity>
         <Text style={styles.headerText}>{subMenu}</Text>
