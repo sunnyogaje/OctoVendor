@@ -13,12 +13,16 @@ import {
   View
 } from "react-native";
 
- import UploadIcon from '@/assets/icons/upload.png';
+import UploadIcon from "@/assets/icons/upload.png";
 
 export default function AddProduct() {
   const [portionToggle, setPortionToggle] = useState(false);
-   const router = useRouter();
-     const [price, setPrice] = useState("");
+  const router = useRouter();
+  const [price, setPrice] = useState("");
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [selectedMenu, setSelectedMenu] = useState("");
+
+  const menus = ["Breakfast", "Lunch", "Dinner", "Drinks"];
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#fff" }}>
@@ -30,15 +34,15 @@ export default function AddProduct() {
       >
         {/* Header */}
         <View style={styles.header}>
-          <TouchableOpacity onPress={() => router.push('/(main)/food/menu')}  >
-             <Ionicons name="arrow-back" size={22} color="#000" />
+          <TouchableOpacity onPress={() => router.push("/(main)/food/menu")}>
+            <Ionicons name="arrow-back" size={22} color="#000" />
           </TouchableOpacity>
           <Text style={styles.headerText}>Add product</Text>
-          {/* <View style={{ width: 22 }} /> */}
         </View>
 
         {/* Form */}
         <View style={styles.card}>
+          {/* Product Name */}
           <View style={styles.inputBox}>
             <Ionicons name="grid-outline" size={18} color="#6A1B9A" />
             <TextInput
@@ -48,16 +52,47 @@ export default function AddProduct() {
             />
           </View>
 
-          <View style={styles.inputBox}>
-            <Ionicons name="grid-outline" size={18} color="#6A1B9A" />
-            <TextInput
-              placeholder="Select Menu"
-              placeholderTextColor="#999"
-              style={styles.textInput}
-            />
-            <Ionicons name="chevron-down" size={18} color="#6A1B9A" />
+          {/* Custom Menu Dropdown */}
+          <View>
+            <TouchableOpacity
+              style={styles.inputBox}
+              onPress={() => setMenuOpen(!menuOpen)}
+            >
+              <Ionicons name="list-outline" size={18} color="#6A1B9A" />
+              <Text
+                style={[
+                  styles.textInput,
+                  { color: selectedMenu ? "#111827" : "#999", paddingVertical: 0 },
+                ]}
+              >
+                {selectedMenu || "Select Menu"}
+              </Text>
+              <Ionicons
+                name={menuOpen ? "chevron-up" : "chevron-down"}
+                size={18}
+                color="#6A1B9A"
+              />
+            </TouchableOpacity>
+
+            {menuOpen && (
+              <View style={styles.dropdown}>
+                {menus.map((menu, idx) => (
+                  <TouchableOpacity
+                    key={idx}
+                    style={styles.dropdownItem}
+                    onPress={() => {
+                      setSelectedMenu(menu);
+                      setMenuOpen(false);
+                    }}
+                  >
+                    <Text style={styles.dropdownText}>{menu}</Text>
+                  </TouchableOpacity>
+                ))}
+              </View>
+            )}
           </View>
 
+          {/* Product Description */}
           <Text style={styles.label}>Product description</Text>
           <TextInput
             style={[styles.textArea]}
@@ -66,6 +101,7 @@ export default function AddProduct() {
             multiline
           />
 
+          {/* Product Details */}
           <Text style={styles.label}>Product Details</Text>
           <TextInput
             style={[styles.textArea]}
@@ -80,32 +116,35 @@ export default function AddProduct() {
           <Text style={styles.sectionTitle}>Media</Text>
 
           <TouchableOpacity style={styles.mediaBox}>
-            {/* <Ionicons name="image-outline" size={40} color="#999" /> */}
-              <Image 
-              source={UploadIcon} 
-              style={{ width: 40, height: 40, tintColor: "#999" }} 
+            <Image
+              source={UploadIcon}
+              style={{ width: 40, height: 40, tintColor: "#999" }}
             />
-
             <Text style={styles.mediaText}>Add image</Text>
             <Text style={styles.mediaSubText}>(Not more than 5mb size)</Text>
           </TouchableOpacity>
 
           <TouchableOpacity style={styles.mediaBox}>
-            {/* <Ionicons name="image-outline" size={40} color="#999" /> */}
-            <Image 
-              source={UploadIcon} 
-              style={{ width: 40, height: 40, tintColor: "#999" }} 
+            <Image
+              source={UploadIcon}
+              style={{ width: 40, height: 40, tintColor: "#999" }}
             />
-
             <Text style={styles.mediaText}>Add video</Text>
             <Text style={styles.mediaSubText}>(Not more than 10mb size)</Text>
           </TouchableOpacity>
 
           <View style={styles.row}>
-            <TouchableOpacity style={[styles.smallBtn, { flexDirection: "column" }]}>
-              <Image 
-                source={UploadIcon} 
-                style={{ width: 20, height: 20, tintColor: "#999", marginBottom: 4 }} 
+            <TouchableOpacity
+              style={[styles.smallBtn, { flexDirection: "column" }]}
+            >
+              <Image
+                source={UploadIcon}
+                style={{
+                  width: 20,
+                  height: 20,
+                  tintColor: "#999",
+                  marginBottom: 4,
+                }}
               />
               <Text style={styles.smallBtnText}>Add image</Text>
             </TouchableOpacity>
@@ -144,8 +183,7 @@ export default function AddProduct() {
           </View>
         )}
 
-
-         {/* Price Input (last field) */}
+        {/* Price Input */}
         <View style={styles.inputBoxAmount}>
           <Ionicons name="pricetag-outline" size={18} color="#6A1B9A" />
           <TextInput
@@ -157,7 +195,6 @@ export default function AddProduct() {
             onChangeText={setPrice}
           />
         </View>
-
 
         {/* Button */}
         <TouchableOpacity style={styles.submitBtn}>
@@ -174,12 +211,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingHorizontal: 17,
     paddingVertical: 10,
-    // justifyContent: "space-between",
   },
   headerText: {
     fontSize: 16,
     fontWeight: "600",
-    marginHorizontal:8,
+    marginHorizontal: 8,
   },
   card: {
     borderWidth: 1,
@@ -195,12 +231,12 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#E0CFF7",
     borderRadius: 8,
+    height: 50,
     paddingHorizontal: 10,
-    paddingVertical: 6,
     marginBottom: 12,
   },
-
-    inputBoxAmount: {
+  textInput: { flex: 1, marginLeft: 8, fontSize: 14, color: "#111827" },
+  inputBoxAmount: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
@@ -210,11 +246,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     paddingVertical: 6,
     margin: 15,
-  },
-  textInput: {
-    flex: 1,
-    marginLeft: 8,
-    fontSize: 14,
   },
   label: {
     fontSize: 14,
@@ -229,7 +260,6 @@ const styles = StyleSheet.create({
     padding: 10,
     minHeight: 80,
     textAlignVertical: "top",
-    
   },
   sectionTitle: {
     fontSize: 15,
@@ -271,8 +301,8 @@ const styles = StyleSheet.create({
     marginLeft: 5,
     color: "#111827",
     fontWeight: "400",
-    fontSize:12,
-    fontFamily:'Lato',
+    fontSize: 12,
+    fontFamily: "Lato",
   },
   circleBtn: {
     width: 36,
@@ -314,5 +344,20 @@ const styles = StyleSheet.create({
     textAlign: "center",
     color: "#fff",
     fontWeight: "600",
+  },
+  dropdown: {
+    borderWidth: 1,
+    borderColor: "#E0CFF7",
+    borderRadius: 8,
+    marginTop: -1,
+    backgroundColor: "#fff",
+  },
+  dropdownItem: {
+    paddingVertical: 12,
+    paddingHorizontal: 10,
+  },
+  dropdownText: {
+    fontSize: 14,
+    color: "#111827",
   },
 });

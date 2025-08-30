@@ -40,7 +40,7 @@ export default function AccountScreen() {
         {/* Header */}
         <View style={styles.header}>
           <TouchableOpacity
-           onPress={() => router.push('/(main)/food/account/account')} 
+            onPress={() => router.back()} 
           style={styles.backBtn} activeOpacity={0.7}>
             <Ionicons name="arrow-back" size={s(22)} color="#111827" />
           </TouchableOpacity>

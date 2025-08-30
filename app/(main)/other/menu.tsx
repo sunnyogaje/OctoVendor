@@ -40,7 +40,7 @@ const GAP = 16;
 const CARD_W = (W - H_PAD * 2 - GAP) / 2;
 
 type FilterTab = "All" | "Published" | "Unpublished";
-type BottomTab = "Products" | "Menus";
+type BottomTab = "Products" | "Categories";
 
 /* ---------- Pill Switch ---------- */
 function PillSwitch({
@@ -90,34 +90,34 @@ export default function ProductsScreen() {
     () => [
       {
         id: "1",
-        name: "Suya Burger",
+        name: "Luna Ribbed Midi...",
         variant: "Large",
         price: "7,500",
-        image: require("@/assets/images/menu/burger1.jpg"),
+        image: require("@/assets/images/menu/dress.png"),
         published: true,
       },
       {
         id: "2",
-        name: "Suya Burger",
+        name: "Luna Ribbed Midi...",
         variant: "Medium",
         price: "7,500",
-        image: require("@/assets/images/menu/burger2.jpg"),
+        image: require("@/assets/images/menu/dress.png"),
         published: false,
       },
       {
         id: "3",
-        name: "Salmon Bowl",
+        name: "Luna Ribbed Midi...",
         variant: "Large",
         price: "7,500",
-        image: require("@/assets/images/menu/bowl.jpg"),
+        image: require("@/assets/images/menu/dress.png"),
         published: true,
       },
       {
         id: "4",
-        name: "Pepperoni Pizza",
+        name: "Luna Ribbed Midi...",
         variant: "Large",
         price: "7,500",
-        image: require("@/assets/images/menu/pizza.jpg"),
+        image: require("@/assets/images/menu/dress.png"),
         published: true,
       },
     ],
@@ -126,27 +126,11 @@ export default function ProductsScreen() {
 
   // 🖼️ Categories
   const categories = [
-    {
-      id: "1",
-      title: "Main dishes",
-      items: "12 items",
-      image:
-        require("@/assets/images/menu/burger1.jpg"),
-    },
-    {
-      id: "2",
-      title: "Appetizer",
-      items: "12 items",
-      image:
-        require("@/assets/images/menu/burger1.jpg"),
-    },
-    {
-      id: "3",
-      title: "Breakfast",
-      items: "12 items",
-      image:
-       require("@/assets/images/menu/burger1.jpg"),
-    },
+    { id: "1", title: "Fashion" },
+    { id: "2", title: "Books" },
+    { id: "3", title: "Beauty" },
+    { id: "4", title: "Health" },
+    { id: "5", title: "Education" },
   ];
 
   const filtered = useMemo(() => {
@@ -228,7 +212,6 @@ export default function ProductsScreen() {
               style={styles.addBtn}
               activeOpacity={0.85}
             >
-              
               <Ionicons name="add" size={22} color="#fff" />
             </TouchableOpacity>
           )}
@@ -293,27 +276,28 @@ export default function ProductsScreen() {
             scrollEnabled={false}
           />
         ) : (
-          <View style={{ marginTop: 20 }}>
+          <View style={{ marginTop: 20, gap: 16 }}>
             {categories.map((cat) => (
-              <TouchableOpacity  key={cat.id}    onPress={() => router.push(`/(main)/other/menus/${cat.title}`)}>
-                <View key={cat.id} style={styles.catRow}>
-                  <View style={{ flex: 1 }}>
-                    <Text style={styles.catLabel}>Menu</Text>
-                    <Text style={styles.catTitle}>{cat.title}</Text>
-                    <Text style={styles.catItems}>{cat.items}</Text>
-                  </View>
-                  <Image source={cat.image} style={styles.catImage} />
-                </View>
+              <TouchableOpacity
+                key={cat.id}
+                // onPress={() => router.push(`/(main)/other/menus/${cat.title}`)}
+                style={styles.categoryBox}
+                activeOpacity={0.8}
+              >
+                <Text style={styles.categoryText}>{cat.title}</Text>
               </TouchableOpacity>
+
+              
             ))}
 
-            {/* Add Menu button */}
-            <View style={styles.addMenuWrapper}>
-              <TouchableOpacity style={styles.addMenuButton} onPress={() => router.push('/(main)/other/menus/add')}>
-                <Ionicons name="add" size={20} color={P.purple} />
-                <Text style={styles.addMenuText}>Add Menu</Text>
-              </TouchableOpacity>
-            </View>
+            {/* Create New Category button */}
+          <TouchableOpacity
+            style={styles.createCategoryBtn}
+            activeOpacity={0.9}
+            onPress={() => router.push("/(main)/other/categories/add")}
+          >
+            <Text style={styles.createCategoryText}>Create New Category</Text>
+          </TouchableOpacity>
           </View>
         )}
       </ScrollView>
@@ -340,17 +324,17 @@ export default function ProductsScreen() {
           </Text>
         </TouchableOpacity>
         <TouchableOpacity
-          style={[styles.seg, bottomTab === "Menus" && styles.segActive]}
+          style={[styles.seg, bottomTab === "Categories" && styles.segActive]}
           activeOpacity={0.9}
-          onPress={() => setBottomTab("Menus")}
+          onPress={() => setBottomTab("Categories")}
         >
           <Text
             style={[
               styles.segText,
-              bottomTab === "Menus" && styles.segTextActive,
+              bottomTab === "Categories" && styles.segTextActive,
             ]}
           >
-            Menus
+            Categories
           </Text>
         </TouchableOpacity>
       </View>
@@ -451,52 +435,35 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
   },
 
-  // --- Categories ---
-  catRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginBottom: 25,
+  // Category boxes (new design)
+  categoryBox: {
+    borderWidth: 1,
+    borderColor: "#E6E1EC",
+    borderRadius: 8,
+    paddingVertical: 18,
+    paddingHorizontal: 16,
+    backgroundColor: "#FFFFFF",
   },
-  catLabel: {
-    fontSize: 14,
-    color: "#999",
-    marginBottom: 2,
-  },
-  catTitle: {
+  categoryText: {
     fontSize: 16,
-    fontWeight: "600",
-    color: "#000",
-    marginBottom: 2,
+    fontWeight: "500",
+    color: "#111827",
   },
-  catItems: {
-    fontSize: 13,
-    color: "#666",
-  },
-  catImage: {
-    width: 100,
-    height: 60,
-    borderRadius: 10,
-    marginLeft: 15,
-  },
-  addMenuWrapper: {
-    alignItems: "flex-end",
-    marginTop: 30,
-    marginBottom: 40,
-  },
-  addMenuButton: {
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: "#EDE8ED",
-    paddingHorizontal: 20,
-    paddingVertical: 12,
-    borderRadius: 30,
-  },
-  addMenuText: {
-    color: P.purple,
-    fontSize: 15,
-    fontWeight: "600",
-    marginLeft: 8,
-  },
+
+  createCategoryBtn: {
+  backgroundColor: P.purple,
+  borderRadius: 8,
+  paddingVertical: 14,
+  alignItems: "center",
+  justifyContent: "center",
+  marginTop: 20,
+},
+createCategoryText: {
+  color: "#fff",
+  fontSize: 15,
+  fontWeight: "600",
+},
+
 
   // Bottom switcher
   bottomSwitcher: {
